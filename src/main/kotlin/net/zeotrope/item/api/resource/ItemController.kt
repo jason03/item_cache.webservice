@@ -6,6 +6,7 @@ import net.zeotrope.item.domain.ItemStatus
 import net.zeotrope.item.model.ItemDto
 import net.zeotrope.item.service.ItemService
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.NotBlank
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController
     value = ["/api/v1"],
     produces = ["application/json"]
 )
-class ItemController(private val itemService: ItemService) {
+class ItemController(@Autowired private val itemService: ItemService) {
 
     @GetMapping(value = ["/items"])
     @ResponseStatus(HttpStatus.OK)

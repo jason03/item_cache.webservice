@@ -18,7 +18,6 @@ spring:
     host: ${POSTGRES_HOST:postgres}
     port: ${POSTGRES_PORT:5432}
     database: ${POSTGRES_DB:itemsdb}
-#    url: r2dbc:postgresql://${POSTGRES_HOST:postgres}:5432/${POSTGRES_DB:itemsdb}
     username: ${POSTGRES_USER:item_user}
     password: ${POSTGRES_PASSWORD:item_pass}
     pool:
