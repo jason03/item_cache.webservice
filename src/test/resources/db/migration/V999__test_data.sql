@@ -1,0 +1,21 @@
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+INSERT INTO public.items (id, status, name, summary, created_at, last_modified_at, discontinued_at) OVERRIDING SYSTEM VALUE VALUES (1, 'CURRENT', 'Item 1', 'Item 1 summary', '2025-01-01 00:00:00+00', '2025-01-01 00:00:00+00', null);
+INSERT INTO public.items (id, status, name, summary, created_at, last_modified_at, discontinued_at) OVERRIDING SYSTEM VALUE VALUES (2, 'CURRENT', 'Item 2', 'Item 2 summary', '2025-01-01 00:00:00+00', '2025-01-01 00:00:00+00', null);
+INSERT INTO public.items (id, status, name, summary, created_at, last_modified_at, discontinued_at) OVERRIDING SYSTEM VALUE VALUES (3, 'CURRENT', 'Item 3', 'Item 3 summary', '2025-01-01 06:00:00+00', '2025-01-01 06:00:00+00', null);
+INSERT INTO public.items (id, status, name, summary, created_at, last_modified_at, discontinued_at) OVERRIDING SYSTEM VALUE VALUES (4, 'CURRENT', 'Item 4', 'Item 4 summary', '2025-01-01 09:00:00+00', '2025-01-01 09:00:00+00', null);
+INSERT INTO public.items (id, status, name, summary, created_at, last_modified_at, discontinued_at) OVERRIDING SYSTEM VALUE VALUES (5, 'DISCONTINUED', 'Item 5', 'Item 5 summary', '2025-01-02 12:00:00+00', '2025-01-02 12:00:00+00', null);
+INSERT INTO public.items (id, status, name, summary, created_at, last_modified_at, discontinued_at) OVERRIDING SYSTEM VALUE VALUES (6, 'CURRENT', 'Item 6', 'Item 6 summary', '2025-02-01 00:00:00+00', '2025-02-01 00:00:00+00', '2025-04-01 00:00:00+00');
+
+
+SELECT pg_catalog.setval('public.items_id_seq', 7, true);

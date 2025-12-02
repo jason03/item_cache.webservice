@@ -1,0 +1,38 @@
+name: item-cache-service
+
+services:
+  postgres-db-itemservice:
+    image: postgres:17.6
+    container_name: item_postgres-db
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: itemsdb
+      POSTGRES_USER: item_user
+      POSTGRES_PASSWORD: item_pass
+    volumes:
+      - postgres-item-data:/var/lib/postgresql/data
+    networks:
+      - backend-item
+
+  redis-itemservice:
+    image: redis:8.2.3-alpine
+    container_name: item_redis
+    restart: on-failure
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 2s
+      retries: 5
+    command: [ "redis-server", "--save", "", "--appendonly", "no" ]
+    networks:
+      - backend-item
+
+volumes:
+  postgres-item-data:
+
+networks:
+  backend-item:
