@@ -1,12 +1,12 @@
 package net.zeotrope.item.repository
 
-import kotlinx.coroutines.flow.Flow
 import net.zeotrope.item.domain.Item
 import net.zeotrope.item.domain.ItemStatus
-import org.springframework.data.repository.kotlin.CoroutineCrudRepository
+import org.springframework.data.repository.reactive.ReactiveCrudRepository
 import org.springframework.stereotype.Repository
+import reactor.core.publisher.Flux
 
 @Repository
-interface ItemRepository : CoroutineCrudRepository<Item, Long> {
-    suspend fun findByStatus(status: ItemStatus): Flow<Item>
+interface ItemRepository : ReactiveCrudRepository<Item, Long> {
+    fun findByStatus(status: ItemStatus): Flux<Item>
 }

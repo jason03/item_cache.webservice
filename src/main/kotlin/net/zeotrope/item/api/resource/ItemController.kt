@@ -55,5 +55,5 @@ class ItemController(@Autowired private val itemService: ItemService) {
 
     @DeleteMapping(value = ["/items/{id}"])
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    suspend fun deleteItem(@PathVariable id: Long): ResponseEntity<Unit> = ResponseEntity.status(HttpStatus.NO_CONTENT).body(itemService.delete(id))
+    suspend fun deleteItem(@PathVariable id: Long): ResponseEntity<Void> = ResponseEntity.status(HttpStatus.NO_CONTENT).body(itemService.delete(id))
 }

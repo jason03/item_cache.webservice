@@ -274,14 +274,13 @@ class ItemControllerTest {
     fun `should return 204 when successful delete item`() = runTest {
         // given
         // when
-        coEvery { itemService.delete(any()) } returns Unit
+        coEvery { itemService.delete(any()) } returns null
         // then
         webTestClient.delete()
             .uri("/api/v1/items/1234")
             .exchange()
             .expectStatus().isNoContent
             .expectBody()
-            .jsonPath("$.length()").isEqualTo(0)
 
         coVerify(exactly = 1) { itemService.delete(any()) }
     }

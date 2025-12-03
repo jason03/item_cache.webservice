@@ -1,5 +1,7 @@
 package net.zeotrope.item.repository
 
+import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import kotlinx.coroutines.test.runTest
 import net.zeotrope.item.TestcontainersConfiguration
 import net.zeotrope.item.domain.ItemStatus
@@ -44,7 +46,7 @@ class ItemRepositoryTest : TestServiceContainers() {
         val item = itemDto.toNewItem()
 
         // when
-        val actual = itemRepository.save(item)
+        val actual = itemRepository.save(item).awaitSingle()
 
         // then
         assertAll(
@@ -62,7 +64,7 @@ class ItemRepositoryTest : TestServiceContainers() {
         val invalidId: Long = 1234567890
 
         // when
-        val actual = itemRepository.findById(invalidId)
+        val actual = itemRepository.findById(invalidId).awaitSingleOrNull()
         // then
         assertNull(actual)
     }
@@ -78,8 +80,8 @@ class ItemRepositoryTest : TestServiceContainers() {
         val item = itemDto.toNewItem()
 
         // when
-        val newItem = itemRepository.save(item)
-        val actual = itemRepository.findById(newItem.id)
+        val newItem = itemRepository.save(item).awaitSingle()
+        val actual = itemRepository.findById(newItem.id).awaitSingle()
 
         // then
         with(actual) {
