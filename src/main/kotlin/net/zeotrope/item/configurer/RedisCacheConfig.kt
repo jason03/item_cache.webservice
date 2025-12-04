@@ -1,7 +1,11 @@
 package net.zeotrope.item.configurer
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import net.zeotrope.item.domain.Item
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory
@@ -12,30 +16,19 @@ import org.springframework.data.redis.serializer.RedisSerializationContext
 
 @Configuration
 @EnableRedisRepositories
-class RedisCacheConfig(
-    @Value("\${cache.redis.ttl:600}")
-    val cacheTtl: Long
-) {
-
-//    @Bean
-//    fun redisConnectionFactory(): RedisConnectionFactory = LettuceConnectionFactory()
-//
-//    @Bean
-//    fun cacheManager(connectionFactory: RedisConnectionFactory): RedisCacheManager = RedisCacheManager.builder(connectionFactory)
-//        .cacheDefaults(
-//            RedisCacheConfiguration.defaultCacheConfig()
-//                .serializeValuesWith(
-//                    RedisSerializationContext.SerializationPair.fromSerializer(GenericJackson2JsonRedisSerializer())
-//                )
-//                .entryTtl(Duration.ofSeconds(cacheTtl)) // default TTL
-//                .disableCachingNullValues()
-//        )
-//        .transactionAware()
-//        .build()
+class RedisCacheConfig {
 
     @Bean
     fun reactiveRedisTemplate(factory: ReactiveRedisConnectionFactory): ReactiveRedisTemplate<String, Item> {
-        val serializer = GenericJackson2JsonRedisSerializer()
+        val objectMapper = jacksonObjectMapper()
+        objectMapper.registerModule(JavaTimeModule())
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+        objectMapper.activateDefaultTyping(
+            objectMapper.polymorphicTypeValidator,
+            ObjectMapper.DefaultTyping.NON_FINAL,
+            JsonTypeInfo.As.PROPERTY
+        )
+        val serializer = GenericJackson2JsonRedisSerializer(objectMapper).configure {}
         val context = RedisSerializationContext
             .newSerializationContext<String, Item>(serializer)
             .build()

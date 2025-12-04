@@ -1,10 +1,17 @@
 package net.zeotrope.item.domain
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.CLASS,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "@class",
+    defaultImpl = Item::class
+)
 @Table(name = "items")
 data class Item(
     @Id

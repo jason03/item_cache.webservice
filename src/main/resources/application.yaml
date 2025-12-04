@@ -37,7 +37,7 @@ spring:
       host: ${REDIS_HOST:item_redis}
       port: ${REDIS_PORT:6379}
       client-type: lettuce
-      timeout: 3600
+      timeout: 300
 
 #  # Spring cache:
   cache:

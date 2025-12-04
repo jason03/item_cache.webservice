@@ -140,7 +140,7 @@ class ItemControllerTest {
             .exchange()
             .expectStatus().isOk
             .expectBody()
-            .jsonPath("$.length()").isEqualTo(7)
+            .jsonPath("$.length()").isEqualTo(8)
             .jsonPath("$.id").isEqualTo("1234567890")
             .jsonPath("$.status").isEqualTo("CURRENT")
             .jsonPath("$.name").isEqualTo("Article Title One")
@@ -215,7 +215,7 @@ class ItemControllerTest {
             .exchange()
             .expectStatus().isNoContent
             .expectBody()
-            .jsonPath("$.length()").isEqualTo(7)
+            .jsonPath("$.length()").isEqualTo(8)
 
         coVerify(exactly = 1) { itemService.update(any(), any()) }
     }
@@ -266,7 +266,7 @@ class ItemControllerTest {
             }.exchange()
             .expectStatus().isNoContent
             .expectBody()
-            .jsonPath("$.length()").isEqualTo(7)
+            .jsonPath("$.length()").isEqualTo(8)
         coVerify(exactly = 1) { itemService.updateItemStatus(any(), any(ItemStatus::class)) }
     }
 
@@ -286,16 +286,15 @@ class ItemControllerTest {
     }
 
     @Test
-    fun `should throw exception when item not found when deleting item `() = runTest {
+    fun `should not error when item not found when deleting item `() = runTest {
         // given
         // when
-        coEvery { itemService.delete(any()) } throws ItemNotFoundException("Test Error")
+        coEvery { itemService.delete(any()) } returns null
         // then
         webTestClient.delete()
             .uri("/api/v1/items/1234")
             .exchange()
-            .expectStatus().isNotFound
-            .expectBody()
-            .jsonPath("$.message").isEqualTo("Item not found for request: /api/v1/items/1234")
+            .expectStatus().isNoContent
+            .expectBody().isEmpty
     }
 }

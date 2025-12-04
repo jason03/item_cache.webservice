@@ -9,9 +9,9 @@ import net.zeotrope.item.domain.Item
 import net.zeotrope.item.domain.ItemStatus
 import net.zeotrope.item.exceptions.ItemNotFoundException
 import net.zeotrope.item.model.ItemDto
+import net.zeotrope.item.repository.ItemCacheRepository
 import net.zeotrope.item.repository.ItemRepository
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,6 +25,7 @@ import java.time.LocalDateTime
 @SpringBootTest(
     classes = [
         ItemService::class,
+        ItemCacheRepository::class,
         ItemRepository::class
     ]
 )
@@ -32,6 +33,9 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
 
     @MockkBean
     private lateinit var itemRepository: ItemRepository
+
+    @MockkBean
+    private lateinit var itemCacheRepository: ItemCacheRepository
 
     private val createdDate = LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0)
     private val modifiedDate = LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0)
@@ -85,7 +89,11 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
             discontinuedAt = null
         )
         // when
+        coEvery { itemCacheRepository.get(any(Long::class)) } returns Mono.empty()
+        coEvery { itemCacheRepository.put(any(), any()) } returns Mono.just(true)
+        coEvery { itemCacheRepository.cacheTtl } returns 1000L
         coEvery { itemRepository.findById(any(Long::class)) } returns Mono.just(item)
+
         val actual = itemService.get(1)
         // then
         assertEquals(item, actual)
@@ -97,7 +105,7 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         // given
         // when
         coEvery { itemRepository.findById(any(Long::class)) } returns Mono.empty()
-
+        coEvery { itemCacheRepository.get(any(Long::class)) } returns Mono.empty()
         // then
         assertThrows<ItemNotFoundException> {
             itemService.get(1)
@@ -170,6 +178,7 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         // when
         coEvery { itemRepository.findById(any(Long::class)) } returns Mono.just(item)
         coEvery { itemRepository.delete(item) } returns Mono.empty()
+        coEvery { itemCacheRepository.evict(any()) } returns Mono.just(true)
         itemService.delete(1)
 
         // then
@@ -177,20 +186,29 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         coVerify(exactly = 1) { itemRepository.delete(any(Item::class)) }
     }
 
-    @Disabled
     @Test
-    fun `should throw an item not found exception when deleting item with invalid Id`() = runTest {
+    fun `should not error when deleting item with invalid Id`() = runTest {
         // given
+        val item = Item(
+            id = 1,
+            status = ItemStatus.CURRENT,
+            name = "Article Title",
+            summary = "Article Summary",
+            createdAt = createdDate,
+            lastModifiedAt = modifiedDate,
+            discontinuedAt = null
+        )
         // when
-        coEvery { itemRepository.findById(any(Long::class)) } returns Mono.empty()
+        coEvery { itemRepository.findById(any(Long::class)) } returns Mono.just(item)
+        coEvery { itemRepository.delete(any()) } returns Mono.empty()
+        coEvery { itemCacheRepository.evict(any()) } returns Mono.just(true)
+
         // then
-        assertThrows<ItemNotFoundException> {
-            itemService.delete(1)
-        }.also {
-            assertEquals("Item with id 1 not found", it.message)
-        }
+        itemService.delete(1)
+
         coVerify(exactly = 1) { itemRepository.findById(any(Long::class)) }
-        coVerify(exactly = 0) { itemRepository.delete(any()) }
+        coVerify(exactly = 1) { itemRepository.delete(any()) }
+        coVerify(exactly = 1) { itemCacheRepository.evict(any()) }
     }
 
     @Test

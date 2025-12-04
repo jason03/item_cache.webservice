@@ -10,20 +10,19 @@ import net.zeotrope.item.exceptions.ItemNotFoundException
 import net.zeotrope.item.mapper.toNewItem
 import net.zeotrope.item.mapper.toUpdateItem
 import net.zeotrope.item.model.ItemDto
+import net.zeotrope.item.repository.ItemCacheRepository
 import net.zeotrope.item.repository.ItemRepository
 import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.CacheEvict
-import org.springframework.cache.annotation.CachePut
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.switchIfEmpty
 import java.time.LocalDateTime
 
 @CacheConfig(cacheNames = ["items"])
 @Service
-class ItemService(private val itemRepository: ItemRepository) {
+class ItemService(private val itemRepository: ItemRepository, private val itemCacheRepository: ItemCacheRepository) {
 
     companion object {
         const val CACHE_NAME = "items"
@@ -52,13 +51,14 @@ class ItemService(private val itemRepository: ItemRepository) {
         itemRepository.findByStatus(status)
     } ?: itemRepository.findAll()
 
-    @Cacheable(cacheNames = [CACHE_NAME], key = "#id")
-    fun getReactive(id: Long): Mono<Item> = itemRepository.findById(id)
+    fun getReactive(id: Long): Mono<Item> = itemCacheRepository.get(id).switchIfEmpty {
+        itemRepository.findById(id).log().flatMap { item ->
+            itemCacheRepository.put(item).log().thenReturn(item)
+        }
+    }
 
-    @CachePut(cacheNames = [CACHE_NAME], key = "#id")
     fun updateReactive(id: Long, item: ItemDto): Mono<Item> = itemRepository.findById(id).flatMap { itemRepository.save(item.toUpdateItem(it)) }
 
-    @CachePut(cacheNames = [CACHE_NAME], key = "#id", value = ["items"])
     fun updateItemStatusReactive(id: Long, status: ItemStatus): Mono<Item> = itemRepository.findById(id).flatMap {
         itemRepository.save(
             it.copy(
@@ -72,6 +72,8 @@ class ItemService(private val itemRepository: ItemRepository) {
         )
     }
 
-    @CacheEvict(cacheNames = [CACHE_NAME], key = "#id")
-    fun deleteReactive(id: Long): Mono<Void> = itemRepository.findById(id).flatMap { item -> itemRepository.delete(item) }
+    fun deleteReactive(id: Long): Mono<Void> = itemRepository.findById(id).flatMap { item ->
+        itemCacheRepository.evict(id)
+        itemRepository.delete(item)
+    }
 }
