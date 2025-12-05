@@ -30,3 +30,16 @@ fun ItemDto.toUpdateItem(oldItemState: Item): Item = with(this) {
         discontinuedAt = if (this.status == ItemStatus.DISCONTINUED && oldItemState.status != ItemStatus.DISCONTINUED) modifiedDateTime else null
     )
 }
+
+fun Item.toUpdateItemStatus(itemStatus: ItemStatus): Item = with(this) {
+    val modifiedDateTime = LocalDateTime.now()
+
+    this.copy(
+        status = itemStatus,
+        lastModifiedAt = modifiedDateTime,
+        discontinuedAt = when (itemStatus) {
+            ItemStatus.DISCONTINUED -> modifiedDateTime
+            else -> null
+        }
+    )
+}

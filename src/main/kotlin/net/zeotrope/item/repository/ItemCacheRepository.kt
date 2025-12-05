@@ -17,7 +17,9 @@ class ItemCacheRepository(
 
     fun get(id: Long): Mono<Item> = redisTemplate.opsForValue().get(cacheKey(id)).log()
 
-    fun put(item: Item, ttl: Duration = Duration.ofSeconds(cacheTtl)): Mono<Boolean> = redisTemplate.opsForValue().set(cacheKey(item.id), item)
+    fun put(item: Item, ttl: Duration = Duration.ofSeconds(cacheTtl)): Mono<Boolean> = redisTemplate.opsForValue().set(cacheKey(item.id), item, ttl).flatMap {
+        Mono.just(it)
+    }
 
     fun evict(id: Long): Mono<Boolean> = redisTemplate.opsForValue().delete(cacheKey(id)).log()
 }

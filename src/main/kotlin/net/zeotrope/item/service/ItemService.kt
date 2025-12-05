@@ -4,11 +4,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import net.zeotrope.item.domain.Item
 import net.zeotrope.item.domain.ItemStatus
 import net.zeotrope.item.exceptions.ItemNotFoundException
 import net.zeotrope.item.mapper.toNewItem
 import net.zeotrope.item.mapper.toUpdateItem
+import net.zeotrope.item.mapper.toUpdateItemStatus
 import net.zeotrope.item.model.ItemDto
 import net.zeotrope.item.repository.ItemCacheRepository
 import net.zeotrope.item.repository.ItemRepository
@@ -18,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
-import java.time.LocalDateTime
 
 @CacheConfig(cacheNames = ["items"])
 @Service
@@ -42,7 +43,7 @@ class ItemService(private val itemRepository: ItemRepository, private val itemCa
         ?: throw ItemNotFoundException("Item with id $id not found")
 
     @Transactional
-    suspend fun delete(id: Long) = deleteReactive(id).awaitFirstOrNull() // { throw ItemNotFoundException("Item with id $id not found") }
+    suspend fun delete(id: Long) = deleteReactive(id).awaitSingleOrNull()
 
     @Transactional
     suspend fun createItem(item: ItemDto): Item = itemRepository.save(item.toNewItem()).awaitSingle()
@@ -57,23 +58,24 @@ class ItemService(private val itemRepository: ItemRepository, private val itemCa
         }
     }
 
-    fun updateReactive(id: Long, item: ItemDto): Mono<Item> = itemRepository.findById(id).flatMap { itemRepository.save(item.toUpdateItem(it)) }
+    fun updateReactive(id: Long, item: ItemDto): Mono<Item> = itemRepository.findById(id).log().flatMap {
+        val updatedItem = item.toUpdateItem(it)
+        itemRepository.save(updatedItem).log().flatMap { saved ->
+            itemCacheRepository.put(saved)
+                .log().thenReturn(saved)
+        }
+    }
 
     fun updateItemStatusReactive(id: Long, status: ItemStatus): Mono<Item> = itemRepository.findById(id).flatMap {
-        itemRepository.save(
-            it.copy(
-                status = status,
-                lastModifiedAt = LocalDateTime.now(),
-                discontinuedAt = when (status) {
-                    ItemStatus.DISCONTINUED -> LocalDateTime.now()
-                    else -> null
-                }
-            )
-        )
+        itemRepository.save(it.toUpdateItemStatus(status)).log().flatMap { saved ->
+            itemCacheRepository.put(saved)
+                .log().thenReturn(saved)
+        }
     }
 
     fun deleteReactive(id: Long): Mono<Void> = itemRepository.findById(id).flatMap { item ->
-        itemCacheRepository.evict(id)
-        itemRepository.delete(item)
+        itemCacheRepository.evict(item.id).log().flatMap {
+            itemRepository.deleteById(id).log()
+        }
     }
 }

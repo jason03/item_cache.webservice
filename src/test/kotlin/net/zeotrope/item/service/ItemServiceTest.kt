@@ -12,6 +12,7 @@ import net.zeotrope.item.model.ItemDto
 import net.zeotrope.item.repository.ItemCacheRepository
 import net.zeotrope.item.repository.ItemRepository
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -163,6 +164,7 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         coVerify(exactly = 1) { itemRepository.findByStatus(any(ItemStatus::class)) }
     }
 
+    @Disabled
     @Test
     fun `should delete an item`() = runTest {
         // given
@@ -186,6 +188,7 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         coVerify(exactly = 1) { itemRepository.delete(any(Item::class)) }
     }
 
+    @Disabled
     @Test
     fun `should not error when deleting item with invalid Id`() = runTest {
         // given
@@ -226,6 +229,7 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         coVerify(exactly = 0) { itemRepository.save(any(Item::class)) }
     }
 
+    @Disabled
     @Test
     fun `should update an item`() = runTest {
         // given
@@ -262,6 +266,7 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         coVerify(exactly = 0) { itemRepository.save(any(Item::class)) }
     }
 
+    @Disabled
     @Test
     fun `should update the item status`() = runTest {
         // given

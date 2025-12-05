@@ -73,4 +73,4 @@ management:
 # Redis cache configuration:
 cache:
   redis:
-    ttl: ${REDIS_TTL:3600}
+    ttl: ${REDIS_TTL:300}
