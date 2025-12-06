@@ -143,7 +143,7 @@ class ItemControllerTest {
             .exchange()
             .expectStatus().isOk
             .expectBody()
-            .jsonPath("$.length()").isEqualTo(8)
+            .jsonPath("$.length()").isEqualTo(7)
             .jsonPath("$.id").isEqualTo("1234567890")
             .jsonPath("$.status").isEqualTo("CURRENT")
             .jsonPath("$.name").isEqualTo("Article Title One")
@@ -218,7 +218,7 @@ class ItemControllerTest {
             .exchange()
             .expectStatus().isNoContent
             .expectBody()
-            .jsonPath("$.length()").isEqualTo(8)
+            .jsonPath("$.length()").isEqualTo(7)
 
         coVerify(exactly = 1) { itemService.update(any(), any()) }
     }
@@ -269,7 +269,7 @@ class ItemControllerTest {
             }.exchange()
             .expectStatus().isNoContent
             .expectBody()
-            .jsonPath("$.length()").isEqualTo(8)
+            .jsonPath("$.length()").isEqualTo(7)
         coVerify(exactly = 1) { itemService.updateItemStatus(any(), any(ItemStatus::class)) }
     }
 
