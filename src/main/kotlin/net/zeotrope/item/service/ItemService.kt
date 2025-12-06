@@ -43,7 +43,7 @@ class ItemService(private val itemRepository: ItemRepository, private val itemCa
         ?: throw ItemNotFoundException("Item with id $id not found")
 
     @Transactional
-    suspend fun delete(id: Long) = deleteReactive(id).awaitSingleOrNull()
+    suspend fun delete(id: Long): Void? = deleteReactive(id).awaitSingleOrNull()
 
     @Transactional
     suspend fun createItem(item: ItemDto): Item = itemRepository.save(item.toNewItem()).awaitSingle()

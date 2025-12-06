@@ -3,12 +3,13 @@ package net.zeotrope.item.mapper
 import net.zeotrope.item.domain.Item
 import net.zeotrope.item.domain.ItemStatus
 import net.zeotrope.item.model.ItemDto
-import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Named
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import java.time.LocalDateTime
 import java.util.stream.Stream
@@ -56,8 +57,8 @@ class ItemMapperTest {
             { assertEquals(dto.status, actual.status) },
             { assertEquals(dto.name, actual.name) },
             { assertEquals(dto.description, actual.summary) },
-            { assertThat("Date and Time error", actual.createdAt.isAfter(baseDateTime)) },
-            { assertThat("Date and Time error", actual.lastModifiedAt == actual.createdAt) }
+            { assertTrue(actual.createdAt.isAfter(baseDateTime)) },
+            { assertTrue(actual.lastModifiedAt == actual.createdAt) }
         )
     }
 
@@ -86,8 +87,42 @@ class ItemMapperTest {
             { assertEquals(item.status, actual.status) },
             { assertEquals(item.name, actual.name) },
             { assertEquals(item.description, actual.summary) },
-            { assertThat("Date and Time error", actual.createdAt == existingItem.createdAt) },
-            { assertThat("Date and Time error", actual.lastModifiedAt.isAfter(existingItem.lastModifiedAt)) }
+            { assertTrue(actual.createdAt == existingItem.createdAt) },
+            { assertTrue(actual.lastModifiedAt.isAfter(existingItem.lastModifiedAt)) }
+        )
+    }
+
+    @CsvSource(
+        "DISCONTINUED, true",
+        "CURRENT, false"
+    )
+    @ParameterizedTest(name = "should update item status to {0} and discontinuedAt populated {1}")
+    fun `should update item to new item status and correctly set discontinuedAt datetime`(status: ItemStatus, hasDiscontinuedAt: Boolean) {
+        // given
+        val createdDate = LocalDateTime.of(2025, 1, 1, 0, 0, 0)
+
+        val item = Item(
+            id = 1234567890,
+            status = ItemStatus.CURRENT,
+            name = "Article Title One",
+            summary = "Article Summary One",
+            createdAt = createdDate,
+            lastModifiedAt = createdDate,
+            discontinuedAt = null
+        )
+        // when
+        val actual = item.toUpdateItemStatus(status)
+        // then
+        assertAll(
+            { assertEquals(status, actual.status) },
+            {
+                assertTrue(
+                    when (hasDiscontinuedAt) {
+                        false -> actual.discontinuedAt == null
+                        true -> actual.discontinuedAt?.let { it.isAfter(createdDate) } ?: false
+                    }
+                )
+            }
         )
     }
 }
