@@ -6,7 +6,6 @@ import net.zeotrope.item.domain.ItemStatus
 import net.zeotrope.item.util.TestServiceContainers
 import org.junit.Before
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Disabled
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.annotation.Import
@@ -98,7 +97,6 @@ class ItemCacheRepositoryTest(@Autowired private val itemCacheRepository: ItemCa
             .verifyComplete()
     }
 
-    @Disabled
     @Test
     fun `should add item to the cache and retrieve it`() {
         // given
