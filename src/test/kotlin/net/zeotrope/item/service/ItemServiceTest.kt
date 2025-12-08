@@ -12,7 +12,6 @@ import net.zeotrope.item.model.ItemDto
 import net.zeotrope.item.repository.ItemCacheRepository
 import net.zeotrope.item.repository.ItemRepository
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.time.Duration
 import java.time.LocalDateTime
 
 @ActiveProfiles("test")
@@ -164,9 +164,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         coVerify(exactly = 1) { itemRepository.findByStatus(any(ItemStatus::class)) }
     }
 
-    @Disabled
     @Test
-    fun `should delete an item`() = runTest {
+    fun `should delete an existing item`() = runTest {
         // given
         val item = Item(
             id = 1,
@@ -179,18 +178,19 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         )
         // when
         coEvery { itemRepository.findById(any(Long::class)) } returns Mono.just(item)
-        coEvery { itemRepository.delete(item) } returns Mono.empty()
+        coEvery { itemRepository.deleteById(any(Long::class)) } returns Mono.empty()
         coEvery { itemCacheRepository.evict(any()) } returns Mono.just(true)
+
         itemService.delete(1)
 
         // then
         coVerify(exactly = 1) { itemRepository.findById(any(Long::class)) }
-        coVerify(exactly = 1) { itemRepository.delete(any(Item::class)) }
+        coVerify(exactly = 1) { itemRepository.deleteById(any(Long::class)) }
+        coVerify(exactly = 1) { itemCacheRepository.evict(any(Long::class)) }
     }
 
-    @Disabled
     @Test
-    fun `should not error when deleting item with invalid Id`() = runTest {
+    fun `should not error or call repository and cache delete when deleting item with invalid Id`() = runTest {
         // given
         val item = Item(
             id = 1,
@@ -202,16 +202,14 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
             discontinuedAt = null
         )
         // when
-        coEvery { itemRepository.findById(any(Long::class)) } returns Mono.just(item)
-        coEvery { itemRepository.delete(any()) } returns Mono.empty()
-        coEvery { itemCacheRepository.evict(any()) } returns Mono.just(true)
+        coEvery { itemRepository.findById(any(Long::class)) } returns Mono.empty()
 
         // then
         itemService.delete(1)
 
         coVerify(exactly = 1) { itemRepository.findById(any(Long::class)) }
-        coVerify(exactly = 1) { itemRepository.delete(any()) }
-        coVerify(exactly = 1) { itemCacheRepository.evict(any()) }
+        coVerify(exactly = 0) { itemRepository.delete(any()) }
+        coVerify(exactly = 0) { itemCacheRepository.evict(any()) }
     }
 
     @Test
@@ -229,9 +227,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         coVerify(exactly = 0) { itemRepository.save(any(Item::class)) }
     }
 
-    @Disabled
     @Test
-    fun `should update an item`() = runTest {
+    fun `should update an existing item`() = runTest {
         // given
         val item = Item(
             status = ItemStatus.CURRENT,
@@ -245,10 +242,15 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         // when
         coEvery { itemRepository.findById(any(Long::class)) } returns Mono.just(item)
         coEvery { itemRepository.save(any(Item::class)) } returns Mono.just(item)
+        coEvery { itemCacheRepository.cacheTtl } returns 300L
+        coEvery { itemCacheRepository.put(any(Item::class), any(Duration::class)) } returns Mono.just(true)
+
         itemService.update(1, itemDto)
         // then
         coVerify(exactly = 1) { itemRepository.findById(any(Long::class)) }
         coVerify(exactly = 1) { itemRepository.save(any(Item::class)) }
+        coVerify(exactly = 1) { itemCacheRepository.cacheTtl }
+        coVerify(exactly = 1) { itemCacheRepository.put(any(Item::class), any(Duration::class)) }
     }
 
     @Test
@@ -266,9 +268,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         coVerify(exactly = 0) { itemRepository.save(any(Item::class)) }
     }
 
-    @Disabled
     @Test
-    fun `should update the item status`() = runTest {
+    fun `should update an existing item's status`() = runTest {
         // given
         val newItemStatus = ItemStatus.DISCONTINUED
         val item = Item(
@@ -282,10 +283,15 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         // when
         coEvery { itemRepository.findById(any(Long::class)) } returns Mono.just(item)
         coEvery { itemRepository.save(any(Item::class)) } returns Mono.just(item.copy(status = newItemStatus))
+        coEvery { itemCacheRepository.cacheTtl } returns 300L
+        coEvery { itemCacheRepository.put(any(Item::class), any(Duration::class)) } returns Mono.just(true)
+
         val actual = itemService.updateItemStatus(1, newItemStatus)
         // then
         assertEquals(newItemStatus, actual.status)
         coVerify(exactly = 1) { itemRepository.findById(any(Long::class)) }
         coVerify(exactly = 1) { itemRepository.save(any(Item::class)) }
+        coVerify(exactly = 1) { itemCacheRepository.cacheTtl }
+        coVerify(exactly = 1) { itemCacheRepository.put(any(Item::class), any(Duration::class)) }
     }
 }
