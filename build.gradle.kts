@@ -95,3 +95,16 @@ kotlin {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+sourceSets {
+    main {
+        kotlin {
+            srcDirs("src/main/kotlin")
+        }
+    }
+    test {
+        kotlin {
+            srcDirs("src/test/kotlin", "src/test-integration/kotlin")
+        }
+    }
+}

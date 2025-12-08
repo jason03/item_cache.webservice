@@ -18,4 +18,4 @@ INSERT INTO public.items (status, name, summary, created_at, last_modified_at, d
 INSERT INTO public.items (status, name, summary, created_at, last_modified_at, discontinued_at) OVERRIDING SYSTEM VALUE VALUES ('DISCONTINUED', 'Item 6', 'Item 6 summary', '2025-02-01 00:00:00+00', '2025-02-01 00:00:00+00', '2025-04-01 00:00:00+00');
 
 
-SELECT pg_catalog.setval('public.items_id_seq', 7, true);
+SELECT pg_catalog.setval('public.items_id_seq', 6, true);
