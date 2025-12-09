@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 
 @Import(TestcontainersConfiguration::class)
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ItemIntegrationTest : TestServiceContainers() {
@@ -55,12 +55,12 @@ class ItemIntegrationTest : TestServiceContainers() {
     @Test
     fun `should return 200 and get item by id`() {
         // given
-        val itemId = 1L
-        val testItem1 = Item(
-            id = 1,
+        val itemId = 2L
+        val testItem = Item(
+            id = itemId,
             status = ItemStatus.CURRENT,
-            name = "Item 1",
-            summary = "Item 1 summary",
+            name = "Item 2",
+            summary = "Item 2 summary",
             createdAt = LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0),
             lastModifiedAt = LocalDateTime.of(2025, 1, 1, 0, 0, 0, 0),
             discontinuedAt = null
@@ -75,7 +75,7 @@ class ItemIntegrationTest : TestServiceContainers() {
         // then
         StepVerifier.create(actual.responseBody)
             .assertNext {
-                assertEquals(testItem1, it)
+                assertEquals(testItem, it)
             }
             .verifyComplete()
     }
@@ -148,6 +148,7 @@ class ItemIntegrationTest : TestServiceContainers() {
             .bodyValue(updatedItem)
             .exchange()
             .expectStatus().isNoContent
+            .expectBody().isEmpty
     }
 
     @Order(6)
@@ -165,9 +166,7 @@ class ItemIntegrationTest : TestServiceContainers() {
             }
             .exchange()
             .expectStatus().isNoContent
-            .expectBody()
-            .jsonPath("$.discontinuedAt").isNotEmpty
-            .jsonPath("$.status").isEqualTo("DISCONTINUED")
+            .expectBody().isEmpty
     }
 
     @Order(7)

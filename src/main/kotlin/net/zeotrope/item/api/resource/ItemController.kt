@@ -43,7 +43,7 @@ class ItemController(@Autowired private val itemService: ItemService) {
     @PutMapping(value = ["/items/{id}"])
     @ResponseStatus(HttpStatus.NO_CONTENT)
     suspend fun updateItem(@PathVariable id: Long, @NotBlank @RequestBody item: ItemDto): ResponseEntity<Item> =
-        ResponseEntity.status(HttpStatus.NO_CONTENT).body(itemService.update(id, item))
+        ResponseEntity.status(HttpStatus.NO_CONTENT).body(itemService.update(id, item).let { null })
 
     @PutMapping(
         value = ["/items/{id}"],
@@ -51,7 +51,7 @@ class ItemController(@Autowired private val itemService: ItemService) {
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
     suspend fun updateItemStatus(@PathVariable id: Long, @RequestParam(name = "status") status: ItemStatus): ResponseEntity<Item> =
-        ResponseEntity.status(HttpStatus.NO_CONTENT).body(itemService.updateItemStatus(id, status))
+        ResponseEntity.status(HttpStatus.NO_CONTENT).body(itemService.updateItemStatus(id, status).let { null })
 
     @DeleteMapping(value = ["/items/{id}"])
     @ResponseStatus(HttpStatus.NO_CONTENT)
