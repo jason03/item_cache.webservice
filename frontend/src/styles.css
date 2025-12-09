@@ -1,0 +1,32 @@
+:root{--bg:#0f172a;--panel:#111827;--card:#0b1220;--text:#e5e7eb;--muted:#9ca3af;--primary:#3b82f6;--danger:#ef4444;--ok:#10b981;--warn:#f59e0b}
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";background:linear-gradient(180deg,#0b1220,#05070d);color:var(--text)}
+.container{max-width:1100px;margin:0 auto;padding:16px}
+.header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.header h1{font-size:20px;margin:0}
+nav{display:flex;gap:12px}
+nav a{color:var(--text);text-decoration:none;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.04)}
+nav a.primary{background:linear-gradient(90deg,#1f2937,#111827);border:1px solid #242e42}
+main{background:rgba(255,255,255,0.02);border:1px solid #1f2937;border-radius:12px;padding:16px}
+.toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px}
+label{display:flex;align-items:center;gap:8px}
+select,input,textarea{background:rgba(255,255,255,0.04);border:1px solid #1f2937;color:var(--text);padding:8px 10px;border-radius:8px}
+textarea{min-height:120px}
+button{background:rgba(255,255,255,0.04);border:1px solid #1f2937;color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer}
+button.primary{background:linear-gradient(90deg,#1f2937,#111827);border:1px solid #242e42}
+button.danger{background:rgba(239,68,68,0.1);border-color:#7f1d1d}
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{padding:10px;border-bottom:1px solid #1f2937;text-align:left}
+.table tr:hover{background:rgba(255,255,255,0.03)}
+.table th.sortable{cursor:pointer;user-select:none}
+.table th.sortable:hover{background:rgba(255,255,255,0.04)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.badge{padding:2px 8px;border-radius:999px;font-size:12px;border:1px solid #1f2937}
+.badge.current{background:rgba(16,185,129,.1);border-color:#064e3b;color:#a7f3d0}
+.badge.discontinued{background:rgba(245,158,11,.1);border-color:#7c2d12;color:#fde68a}
+.error{color:#fecaca;background:rgba(239,68,68,.1);padding:8px 10px;border:1px solid #7f1d1d;border-radius:8px}
+.card{background:rgba(255,255,255,0.03);border:1px solid #1f2937;border-radius:12px;padding:16px}
+.form{display:grid;gap:12px;max-width:640px}
+.form label{flex-direction:column;align-items:stretch}
+.form label span{color:var(--muted);font-size:12px;margin-bottom:4px}

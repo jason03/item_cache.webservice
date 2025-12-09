@@ -57,7 +57,7 @@ curl -X PUT 'http://localhost:8080/api/v1/items/1?status=discontinued' \
 #### Delete an existing item by id
 #### DELETE /items/{n}
 ```
-curl -v -X DELETE 'http://localhost:8080/api/v1/items' \
+curl -v -X DELETE 'http://localhost:8080/api/v1/items/1' \
 -H 'Accept: application/json' \
 -H 'Content-Type: application/json' | jq .
 ```
