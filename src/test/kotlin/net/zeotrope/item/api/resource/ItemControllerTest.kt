@@ -214,8 +214,7 @@ class ItemControllerTest {
             .bodyValue(item)
             .exchange()
             .expectStatus().isNoContent
-            .expectBody()
-            .jsonPath("$.length()").isEqualTo(7)
+            .expectBody().isEmpty
 
         coVerify(exactly = 1) { itemService.update(any(), any()) }
     }
@@ -265,8 +264,7 @@ class ItemControllerTest {
                     .build()
             }.exchange()
             .expectStatus().isNoContent
-            .expectBody()
-            .jsonPath("$.length()").isEqualTo(7)
+            .expectBody().isEmpty
         coVerify(exactly = 1) { itemService.updateItemStatus(any(), any(ItemStatus::class)) }
     }
 
