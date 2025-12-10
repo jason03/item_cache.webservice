@@ -34,7 +34,7 @@ class ItemController(@Autowired private val itemService: ItemService) {
 
     @GetMapping(value = ["/items/{id}"])
     @ResponseStatus(HttpStatus.OK)
-    suspend fun getItem(@PathVariable id: Long): ResponseEntity<Any> = ResponseEntity.ok(itemService.get(id))
+    suspend fun getItem(@PathVariable id: Long): ResponseEntity<Item> = ResponseEntity.ok(itemService.get(id))
 
     @PostMapping(value = ["/items"])
     @ResponseStatus(HttpStatus.CREATED)
