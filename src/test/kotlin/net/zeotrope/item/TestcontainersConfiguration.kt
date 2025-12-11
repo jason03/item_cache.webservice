@@ -10,10 +10,10 @@ import org.testcontainers.containers.PostgreSQLContainer
 @TestConfiguration(proxyBeanMethods = false)
 class TestcontainersConfiguration {
     @Bean
-    @ServiceConnection
+    @ServiceConnection(name = "postgres")
     fun postgresContainer(): PostgreSQLContainer<*> = TestServiceContainers.postgresContainer
 
     @Bean
-    @ServiceConnection
+    @ServiceConnection(name = "redis")
     fun redisContainer(): RedisContainer = TestServiceContainers.redisContainer
 }
