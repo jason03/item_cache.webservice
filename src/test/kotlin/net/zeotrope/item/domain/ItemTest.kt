@@ -27,7 +27,7 @@ class ItemTest {
         val actual = preSortedStatuses.sortedBy { it.sortOrder() }
 
         // then
-        assert(actual == expectedStatuses)
+        assertEquals(expectedStatuses, actual)
     }
 
     @Test
