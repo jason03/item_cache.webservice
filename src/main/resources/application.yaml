@@ -6,6 +6,8 @@ logging:
     level: "%5p"
   level:
     org.springframework.cache: TRACE
+    org.springframework.data.redis: TRACE
+    org.springframework.jpa: TRACE
 
 spring:
   application:
@@ -37,7 +39,6 @@ spring:
       host: ${REDIS_HOST:item_redis}
       port: ${REDIS_PORT:6379}
       client-type: lettuce
-      timeout: 300
 
 #  # Spring cache:
   cache:
