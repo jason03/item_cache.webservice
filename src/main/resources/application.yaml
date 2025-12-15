@@ -68,9 +68,6 @@ management:
       exposure:
         include: "*"
 
-
-
-
 # Redis cache configuration:
 cache:
   redis:
