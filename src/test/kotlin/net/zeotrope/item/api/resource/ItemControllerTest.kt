@@ -246,7 +246,7 @@ class ItemControllerTest {
         // given
         val updatedItem = Item(
             id = 12345678,
-            status = ItemStatus.CURRENT,
+            status = ItemStatus.DISCONTINUED,
             name = "Article Title",
             summary = "Article Summary",
             createdAt = createdDate,
