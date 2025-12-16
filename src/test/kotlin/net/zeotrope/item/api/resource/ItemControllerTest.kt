@@ -38,7 +38,7 @@ class ItemControllerTest {
 
     @Test
     fun `should return 200 when get all items`() = runTest {
-        // give
+        // given
         val items = listOf(
             Item(
                 id = 1234567890,
