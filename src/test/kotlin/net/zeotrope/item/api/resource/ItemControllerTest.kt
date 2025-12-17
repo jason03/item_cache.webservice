@@ -43,8 +43,8 @@ class ItemControllerTest {
             Item(
                 id = 1234567890,
                 status = ItemStatus.CURRENT,
-                name = "Article Title One",
-                summary = "Article Summary One",
+                name = "Title One",
+                summary = "Summary One",
                 createdAt = createdDate,
                 lastModifiedAt = createdDate,
                 discontinuedAt = null
@@ -52,8 +52,8 @@ class ItemControllerTest {
             Item(
                 id = 1234567891,
                 status = ItemStatus.DISCONTINUED,
-                name = "Article Title Two",
-                summary = "Article Summary Two",
+                name = "Title Two",
+                summary = "Summary Two",
                 createdAt = createdDate,
                 lastModifiedAt = createdDate,
                 discontinuedAt = discontinuedDate
@@ -61,8 +61,8 @@ class ItemControllerTest {
             Item(
                 id = 1234567892,
                 status = ItemStatus.CURRENT,
-                name = "Article Title Three",
-                summary = "Article Summary Three",
+                name = "Title Three",
+                summary = "Summary Three",
                 createdAt = createdDate,
                 lastModifiedAt = createdDate,
                 discontinuedAt = null
@@ -93,8 +93,8 @@ class ItemControllerTest {
             Item(
                 id = 1234567891,
                 status = ItemStatus.CURRENT,
-                name = "Article Title Two",
-                summary = "Article Summary Two",
+                name = "Title Two",
+                summary = "Summary Two",
                 createdAt = createdDate,
                 lastModifiedAt = createdDate,
                 discontinuedAt = null
@@ -126,8 +126,8 @@ class ItemControllerTest {
         val item = Item(
             id = 1234567890,
             status = ItemStatus.CURRENT,
-            name = "Article Title One",
-            summary = "Article Summary One",
+            name = "Title One",
+            summary = "Summary One",
             createdAt = createdDate,
             lastModifiedAt = createdDate,
             discontinuedAt = null
@@ -143,8 +143,8 @@ class ItemControllerTest {
             .jsonPath("$.length()").isEqualTo(7)
             .jsonPath("$.id").isEqualTo("1234567890")
             .jsonPath("$.status").isEqualTo("CURRENT")
-            .jsonPath("$.name").isEqualTo("Article Title One")
-            .jsonPath("$.summary").isEqualTo("Article Summary One")
+            .jsonPath("$.name").isEqualTo("Title One")
+            .jsonPath("$.summary").isEqualTo("Summary One")
             .jsonPath("$.createdAt").isEqualTo("2025-01-01T00:00:00")
             .jsonPath("$.lastModifiedAt").isEqualTo("2025-01-01T00:00:00")
             .jsonPath("$.discontinuedAt").isEmpty()
@@ -172,9 +172,9 @@ class ItemControllerTest {
     fun `should return 201 when create item`() = runTest {
         // given
         val item = ItemDto(
-            name = "Article Title",
+            name = "Title",
             status = ItemStatus.CURRENT,
-            description = "Article Summary"
+            description = "Summary"
         )
         // when
         coEvery { itemService.createItem(any()) } returns item.toNewItem()
@@ -193,15 +193,15 @@ class ItemControllerTest {
     fun `should return 204 when update item`() = runTest {
         // given
         val item = ItemDto(
-            name = "Article Title",
+            name = "Title",
             status = ItemStatus.CURRENT,
-            description = "Article Summary"
+            description = "Summary"
         )
         val updatedItem = Item(
             id = 12345678,
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            summary = "Article Summary",
+            name = "Title",
+            summary = "Summary",
             createdAt = createdDate,
             lastModifiedAt = createdDate,
             discontinuedAt = null
@@ -223,9 +223,9 @@ class ItemControllerTest {
     fun `should throw exception when item not found when updating item`() = runTest {
         // given
         val itemDto = ItemDto(
-            name = "Article Title",
+            name = "Title",
             status = ItemStatus.CURRENT,
-            description = "Article Summary"
+            description = "Summary"
         )
         // when
         coEvery { itemService.update(any(), any()) } throws ItemNotFoundException("Test Error")
@@ -247,8 +247,8 @@ class ItemControllerTest {
         val updatedItem = Item(
             id = 12345678,
             status = ItemStatus.DISCONTINUED,
-            name = "Article Title",
-            summary = "Article Summary",
+            name = "Title",
+            summary = "Summary",
             createdAt = createdDate,
             lastModifiedAt = createdDate,
             discontinuedAt = null

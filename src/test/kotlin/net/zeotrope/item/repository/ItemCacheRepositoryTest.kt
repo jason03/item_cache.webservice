@@ -52,8 +52,8 @@ class ItemCacheRepositoryTest(@Autowired private val itemCacheRepository: ItemCa
         val item = Item(
             id = id,
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            summary = "Article Summary",
+            name = "Title",
+            summary = "Summary",
             createdAt = createdDate,
             lastModifiedAt = createdDate,
             discontinuedAt = null
@@ -76,8 +76,8 @@ class ItemCacheRepositoryTest(@Autowired private val itemCacheRepository: ItemCa
         val item = Item(
             id = id,
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            summary = "Article Summary",
+            name = "Title",
+            summary = "Summary",
             createdAt = createdDate,
             lastModifiedAt = createdDate,
             discontinuedAt = null

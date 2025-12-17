@@ -40,8 +40,8 @@ class ItemRepositoryTest : TestServiceContainers() {
         // given
         val itemDto = ItemDto(
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            description = "Article Summary"
+            name = "Title",
+            description = "Summary"
         )
         val item = itemDto.toNewItem()
 
@@ -74,8 +74,8 @@ class ItemRepositoryTest : TestServiceContainers() {
         // given
         val itemDto = ItemDto(
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            description = "Article Summary"
+            name = "Title",
+            description = "Summary"
         )
         val item = itemDto.toNewItem()
 

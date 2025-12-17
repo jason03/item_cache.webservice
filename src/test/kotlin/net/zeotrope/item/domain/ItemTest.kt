@@ -43,8 +43,8 @@ class ItemTest {
             Item(
                 id = 1234,
                 status = ItemStatus.CURRENT,
-                name = "Article Title",
-                summary = "Article Summary",
+                name = "Title",
+                summary = "Summary",
                 createdAt = dateTime1,
                 lastModifiedAt = dateTime1,
                 discontinuedAt = null
@@ -52,8 +52,8 @@ class ItemTest {
             Item(
                 id = 1235,
                 status = ItemStatus.DISCONTINUED,
-                name = "Article Title Two",
-                summary = "Article Summary Two",
+                name = "Title Two",
+                summary = "Summary Two",
                 createdAt = dateTime5,
                 lastModifiedAt = dateTime5,
                 discontinuedAt = discontinuedDateTime
@@ -61,8 +61,8 @@ class ItemTest {
             Item(
                 id = 1236,
                 status = ItemStatus.CURRENT,
-                name = "Article Title Three",
-                summary = "Article Summary Three",
+                name = "Title Three",
+                summary = "Summary Three",
                 createdAt = dateTime3,
                 lastModifiedAt = dateTime3,
                 discontinuedAt = null
@@ -70,8 +70,8 @@ class ItemTest {
             Item(
                 id = 1237,
                 status = ItemStatus.DISCONTINUED,
-                name = "Article Title Four",
-                summary = "Article Summary Four",
+                name = "Title Four",
+                summary = "Summary Four",
                 createdAt = dateTime4,
                 lastModifiedAt = dateTime4,
                 discontinuedAt = discontinuedDateTime
@@ -79,8 +79,8 @@ class ItemTest {
             Item(
                 id = 20001,
                 status = ItemStatus.CURRENT,
-                name = "Article Title Five",
-                summary = "Article Summary Five",
+                name = "Title Five",
+                summary = "Summary Five",
                 createdAt = dateTime2,
                 lastModifiedAt = dateTime2
             )

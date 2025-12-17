@@ -22,21 +22,21 @@ class ItemMapperTest {
         fun itemDtoToDomain(): Stream<Arguments> = Stream.of(
             Arguments.of(
                 Named.of(
-                    "Article Title",
+                    "Title",
                     ItemDto(
                         status = ItemStatus.CURRENT,
-                        name = "Article Title",
-                        description = "Article Summary"
+                        name = "Title",
+                        description = "Summary"
                     )
                 )
             ),
             Arguments.of(
                 Named.of(
-                    "Article Title Two",
+                    "Title Two",
                     ItemDto(
                         status = ItemStatus.CURRENT,
-                        name = "Article Title Two",
-                        description = "Article Summary Two"
+                        name = "Title Two",
+                        description = "Summary Two"
                     )
                 )
             )
@@ -69,15 +69,15 @@ class ItemMapperTest {
         val existingItem = Item(
             id = 1234567890,
             status = ItemStatus.CURRENT,
-            name = "Article Title One",
-            summary = "Article Summary One",
+            name = "Title One",
+            summary = "Summary One",
             createdAt = baseDateTime,
             lastModifiedAt = baseDateTime
         )
         val item = ItemDto(
             status = ItemStatus.CURRENT,
-            name = "Article Title One",
-            description = "Article Summary"
+            name = "Title One",
+            description = "Summary"
         )
         // when
         val actual = item.toUpdateItem(existingItem)
@@ -104,8 +104,8 @@ class ItemMapperTest {
         val item = Item(
             id = 1234567890,
             status = ItemStatus.CURRENT,
-            name = "Article Title One",
-            summary = "Article Summary One",
+            name = "Title One",
+            summary = "Summary One",
             createdAt = createdDate,
             lastModifiedAt = createdDate,
             discontinuedAt = null

@@ -76,9 +76,9 @@ class ExceptionsHandlerTest {
     @Test
     fun `should handle a no resource found exception`() = runTest {
         // given
-        val uri = "/api/v1/items"
+        val uri = "/api/v1/items/12345"
         // when
-        coEvery { itemService.getAllItems() } throws NoResourceFoundException(uri)
+        coEvery { itemService.get(any(Long::class)) } throws NoResourceFoundException(uri)
         // then
         webTestClient.get()
             .uri("$uri")
@@ -86,7 +86,7 @@ class ExceptionsHandlerTest {
             .expectStatus().isNotFound
             .expectBody()
             .jsonPath("$.message").isEqualTo(
-                "Resource Not Found for request: /api/v1/items"
+                "Resource Not Found for request: /api/v1/items/12345"
             )
     }
 
@@ -94,9 +94,9 @@ class ExceptionsHandlerTest {
     fun `should handle an invalid status exception`() = runTest {
         // given
         val invalidStatus = "invalid"
-        val uri = "/api/v1/items"
+        val uri = "/api/v1/items/123456"
         // when
-        coEvery { itemService.getAllItems() } throws InvalidStatusException(invalidStatus)
+        coEvery { itemService.get(any(Long::class)) } throws InvalidStatusException(invalidStatus)
         // then
         webTestClient.get()
             .uri { uriBuilder ->
@@ -108,7 +108,7 @@ class ExceptionsHandlerTest {
             .expectStatus().isBadRequest
             .expectBody()
             .jsonPath("$.message").isEqualTo(
-                "Item request is invalid: /api/v1/items"
+                "Item request is invalid: /api/v1/items/123456?status=$invalidStatus"
             )
     }
 

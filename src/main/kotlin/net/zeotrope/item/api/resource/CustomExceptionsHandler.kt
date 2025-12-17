@@ -71,7 +71,7 @@ class CustomExceptionsHandler : Logging {
             timestamp = Instant.now(),
             status = HttpStatus.BAD_REQUEST.value(),
             error = HttpStatus.BAD_REQUEST.reasonPhrase,
-            message = "Item request is invalid: ${request.path}"
+            message = "Item request is invalid: ${request.uri}"
         ),
         HttpStatus.BAD_REQUEST
     )

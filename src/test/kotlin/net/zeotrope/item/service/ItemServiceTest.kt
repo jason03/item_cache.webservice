@@ -45,8 +45,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         Item(
             id = 1,
             status = ItemStatus.CURRENT,
-            name = "Article Title One",
-            summary = "Article Summary One",
+            name = "Title One",
+            summary = "Summary One",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
@@ -54,8 +54,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         Item(
             id = 2,
             status = ItemStatus.CURRENT,
-            name = "Article Title Two",
-            summary = "Article Summary Two",
+            name = "Title Two",
+            summary = "Summary Two",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
@@ -63,8 +63,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         Item(
             id = 3,
             status = ItemStatus.CURRENT,
-            name = "Article Title Three",
-            summary = "Article Summary Three",
+            name = "Title Three",
+            summary = "Summary Three",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
@@ -73,8 +73,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
 
     private val itemDto = ItemDto(
         status = ItemStatus.CURRENT,
-        name = "Article Title Ten",
-        description = "Article Summary Ten"
+        name = "Title Ten",
+        description = "Summary Ten"
     )
 
     @Test
@@ -83,8 +83,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         val item = Item(
             id = 1,
             status = ItemStatus.CURRENT,
-            name = "Article Title Ten",
-            summary = "Article Summary Ten",
+            name = "Title Ten",
+            summary = "Summary Ten",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
@@ -120,13 +120,13 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         // given
         val itemDto = ItemDto(
             status = ItemStatus.CURRENT,
-            name = "Article Title Twenty",
-            description = "Article Summary Twenty"
+            name = "Title Twenty",
+            description = "Summary Twenty"
         )
         val expectedItem = Item(
             status = ItemStatus.CURRENT,
-            name = "Article Title Twenty",
-            summary = "Article Summary Twenty",
+            name = "Title Twenty",
+            summary = "Summary Twenty",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
@@ -170,8 +170,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         val item = Item(
             id = 1,
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            summary = "Article Summary",
+            name = "Title",
+            summary = "Summary",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
@@ -195,8 +195,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         val item = Item(
             id = 1,
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            summary = "Article Summary",
+            name = "Title",
+            summary = "Summary",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
@@ -232,8 +232,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         // given
         val item = Item(
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            summary = "Article Summary",
+            name = "Title",
+            summary = "Summary",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
@@ -274,8 +274,8 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
         val newItemStatus = ItemStatus.DISCONTINUED
         val item = Item(
             status = ItemStatus.CURRENT,
-            name = "Article Title",
-            summary = "Article Summary",
+            name = "Title",
+            summary = "Summary",
             createdAt = createdDate,
             lastModifiedAt = modifiedDate,
             discontinuedAt = null
