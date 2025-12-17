@@ -254,7 +254,7 @@ class ItemServiceTest(@Autowired private val itemService: ItemService) {
     }
 
     @Test
-    fun `should throw a item not found exception when updating item with invalid id`() = runTest {
+    fun `should throw a item not found exception when updating item status with invalid id`() = runTest {
         // given
         // when
         coEvery { itemRepository.findById(any(Long::class)) } returns Mono.empty()
